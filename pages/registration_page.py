@@ -11,7 +11,9 @@ class RegistrationPage:
         self._mobile = browser.element('#userNumber')
         self._date_of_birth = browser.element('#dateOfBirthInput')
         self._subjects = browser.element('#subjectsInput')
-        self._hobbies = browser.all('[type=checkbox]')
+        self._hobbies_checkbox_1 = browser.element('[for="hobbies-checkbox-1"]')
+        self._hobbies_checkbox_2 = browser.element('[for="hobbies-checkbox-2"]')
+        self._hobbies_checkbox_3 = browser.element('[for="hobbies-checkbox-3"]')
         self._picture = browser.element('#uploadPicture')
         self._address = browser.element('#currentAddress')
         self._state = browser.element('#state')
@@ -49,9 +51,22 @@ class RegistrationPage:
 
     def fill_date_of_birth(self, year, month, day):
         self._date_of_birth.click()
-        browser.element('.react-datepicker__year-select').select(str(year))
-        browser.element('.react-datepicker__month-select').select(month)
-        browser.element(f'.react-datepicker__day--0{day}').click()
+
+        month_map = {
+            'January': '0', 'February': '1', 'March': '2', 'April': '3',
+            'May': '4', 'June': '5', 'July': '6', 'August': '7',
+            'September': '8', 'October': '9', 'November': '10', 'December': '11'
+        }
+
+        browser.execute_script(
+            "document.querySelector('.react-datepicker__year-select').value = arguments[0];",
+            str(year)
+        )
+        browser.execute_script(
+            "document.querySelector('.react-datepicker__month-select').value = arguments[0];",
+            month_map[month]
+        )
+        browser.element(f'.react-datepicker__day--0{day:02d}').click()
         return self
 
     def add_subjects(self, *subjects):
@@ -61,7 +76,12 @@ class RegistrationPage:
 
     def select_hobbies(self, *hobbies):
         for hobby in hobbies:
-            self._hobbies.element_by(have.value(hobby)).click()
+            if hobby == 'Sports':
+                self._hobbies_checkbox_1.click()
+            elif hobby == 'Reading':
+                self._hobbies_checkbox_2.click()
+            elif hobby == 'Music':
+                self._hobbies_checkbox_3.click()
         return self
 
     def upload_picture(self, file_path):
@@ -73,12 +93,24 @@ class RegistrationPage:
         return self
 
     def select_state(self, value):
+        # Прокручиваем страницу к полю State (чтобы оно стало видимым)
+        browser.execute_script('arguments[0].scrollIntoView(true);', self._state())
+        # Ждем полсекунды чтобы страница успокоилась
+        time.sleep(0.5)
+        # Теперь кликаем обычным способом
         self._state.click()
+        # Ждем появления выпадающего списка
+        time.sleep(0.5)
+        # Выбираем нужный вариант
         browser.all('[id^=react-select][id*=option]').element_by(have.text(value)).click()
         return self
 
     def select_city(self, value):
+        # То же самое для города
+        browser.execute_script('arguments[0].scrollIntoView(true);', self._city())
+        time.sleep(0.5)
         self._city.click()
+        time.sleep(0.5)
         browser.all('[id^=react-select][id*=option]').element_by(have.text(value)).click()
         return self
 
