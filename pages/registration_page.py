@@ -77,11 +77,11 @@ class RegistrationPage:
     def select_hobbies(self, *hobbies):
         for hobby in hobbies:
             if hobby == 'Sports':
-                self._hobbies_checkbox_1.click()
+                browser.element('[for="hobbies-checkbox-1"]').should(have.text("Sports")).click()
             elif hobby == 'Reading':
-                self._hobbies_checkbox_2.click()
+                browser.element('[for="hobbies-checkbox-2"]').should(have.text("Reading")).click()
             elif hobby == 'Music':
-                self._hobbies_checkbox_3.click()
+                browser.element('[for="hobbies-checkbox-3"]').should(have.text("Music")).click()
         return self
 
     def upload_picture(self, file_path):
