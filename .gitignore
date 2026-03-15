@@ -18,4 +18,6 @@ __pycache__/
 
 # Project specific
 allure-results/
-allure-report/
+allure-report/".idea/" 
+"__pycache__/" 
+"*.pyc" 
