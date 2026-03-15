@@ -50,11 +50,11 @@ class RegistrationPage:
         if user.hobbies:
             for hobby in user.hobbies:
                 if hobby.value == 'Sports':
-                    self._hobbies_checkbox_1.click()
+                    browser.element('[for="hobbies-checkbox-1"]').should(have.text("Sports")).click()
                 elif hobby.value == 'Reading':
-                    self._hobbies_checkbox_2.click()
+                    browser.element('[for="hobbies-checkbox-2"]').should(have.text("Reading")).click()
                 elif hobby.value == 'Music':
-                    self._hobbies_checkbox_3.click()
+                    browser.element('[for="hobbies-checkbox-3"]').should(have.text("Music")).click()
 
         # Picture
         if user.picture:
