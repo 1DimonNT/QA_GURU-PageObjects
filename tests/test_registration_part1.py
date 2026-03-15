@@ -1,21 +1,25 @@
-from pages import RegistrationPage
+from pages.registration_page import RegistrationPage
 
-def test_student_registration_fluent():
-    first_name = 'Yasha'
-    last_name = 'Kramarenko'
-    email = 'yashaka@gmail.com'
-    mobile = '1234567890'
 
+def test_student_registration_mid_level():
     (RegistrationPage()
      .open()
-     .fill_first_name(first_name)
-     .fill_last_name(last_name)
-     .fill_email(email)
-     .fill_gender()
-     .fill_mobile(mobile)
+     .fill_first_name('Yasha')
+     .fill_last_name('Kramarenko')
+     .fill_email('yashaka@gmail.com')
+     .select_gender('Male')
+     .fill_mobile('1234567890')
+     .fill_date_of_birth(1990, 'January', 1)
+     .add_subjects('Computer Science', 'Maths')
+     .select_hobbies('Sports', 'Reading')
+     .upload_picture('test.jpg')
+     .fill_address('Some Address 123')
+     .select_state('NCR')
+     .select_city('Delhi')
      .submit()
      .should_have_registered(
-         ('Student Name', f'{first_name} {last_name}'),
-         ('Student Email', email),
-         ('Mobile', mobile)
+         StudentName='Yasha Kramarenko',
+         StudentEmail='yashaka@gmail.com',
+         Gender='Male',
+         Mobile='1234567890'
      ))
