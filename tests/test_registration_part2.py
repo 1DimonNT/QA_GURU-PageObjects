@@ -7,7 +7,7 @@ def test_student_registration_high_level():
     # Полный путь к файлу для загрузки
     current_dir = os.path.dirname(os.path.abspath(__file__))
     project_dir = os.path.dirname(current_dir)
-    file_path = os.path.join(project_dir, 'requirements.txt')
+    file_path = os.path.join(project_dir, 'tests/photo.jpg')
 
     student = User(
         first_name='Yasha',
