@@ -6,7 +6,7 @@ def test_student_registration_mid_level():
     # Полный путь к файлу для загрузки
     current_dir = os.path.dirname(os.path.abspath(__file__))
     project_dir = os.path.dirname(current_dir)
-    file_path = os.path.join(project_dir, 'requirements.txt')
+    file_path = os.path.join(project_dir, 'tests', 'photo.jpg')
 
     (RegistrationPage()
     .open()
@@ -18,7 +18,7 @@ def test_student_registration_mid_level():
     .fill_date_of_birth(1990, 'January', 1)
     .add_subjects('Computer Science', 'Maths')
     .select_hobbies('Sports', 'Reading')
-    .upload_picture(file_path)
+    .upload_picture(file_path)  # только здесь, один раз!
     .fill_address('Some Address 123')
     .select_state('NCR')
     .select_city('Delhi')
