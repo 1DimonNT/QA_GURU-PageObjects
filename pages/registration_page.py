@@ -12,7 +12,9 @@ class RegistrationPage:
         self._mobile = browser.element('#userNumber')
         self._date_of_birth = browser.element('#dateOfBirthInput')
         self._subjects = browser.element('#subjectsInput')
-        self._hobbies = browser.all('[type=checkbox]')
+        self._hobbies_checkbox_1 = browser.element('[for="hobbies-checkbox-1"]')
+        self._hobbies_checkbox_2 = browser.element('[for="hobbies-checkbox-2"]')
+        self._hobbies_checkbox_3 = browser.element('[for="hobbies-checkbox-3"]')
         self._picture = browser.element('#uploadPicture')
         self._address = browser.element('#currentAddress')
         self._state = browser.element('#state')
@@ -28,7 +30,6 @@ class RegistrationPage:
         ''')
         return self
 
-    # ОДИН высокоуровневый шаг вместо многих
     def register(self, user: User):
         # Основные данные
         self._first_name.type(user.first_name)
@@ -38,10 +39,7 @@ class RegistrationPage:
         self._mobile.type(user.mobile)
 
         # Дата рождения
-        self._date_of_birth.click()
-        browser.element('.react-datepicker__year-select').select(str(user.birth_year))
-        browser.element('.react-datepicker__month-select').select(user.birth_month)
-        browser.element(f'.react-datepicker__day--0{user.birth_day}').click()
+        self._fill_date_of_birth(user.birth_year, user.birth_month, user.birth_day)
 
         # Subjects
         if user.subjects:
@@ -51,7 +49,12 @@ class RegistrationPage:
         # Hobbies
         if user.hobbies:
             for hobby in user.hobbies:
-                self._hobbies.element_by(have.value(hobby.value)).click()
+                if hobby.value == 'Sports':
+                    self._hobbies_checkbox_1.click()
+                elif hobby.value == 'Reading':
+                    self._hobbies_checkbox_2.click()
+                elif hobby.value == 'Music':
+                    self._hobbies_checkbox_3.click()
 
         # Picture
         if user.picture:
@@ -63,19 +66,49 @@ class RegistrationPage:
 
         # State and City
         if user.state:
-            self._state.click()
-            browser.all('[id^=react-select][id*=option]').element_by(have.text(user.state)).click()
+            self._select_state(user.state)
             time.sleep(0.5)
-
             if user.city:
-                self._city.click()
-                browser.all('[id^=react-select][id*=option]').element_by(have.text(user.city)).click()
+                self._select_city(user.city)
 
         # Submit
         browser.execute_script('arguments[0].scrollIntoView(true);', self._submit())
         time.sleep(0.5)
         self._submit.click()
         return self
+
+    def _fill_date_of_birth(self, year, month, day):
+        self._date_of_birth.click()
+
+        month_map = {
+            'January': '0', 'February': '1', 'March': '2', 'April': '3',
+            'May': '4', 'June': '5', 'July': '6', 'August': '7',
+            'September': '8', 'October': '9', 'November': '10', 'December': '11'
+        }
+
+        browser.execute_script(
+            "document.querySelector('.react-datepicker__year-select').value = arguments[0];",
+            str(year)
+        )
+        browser.execute_script(
+            "document.querySelector('.react-datepicker__month-select').value = arguments[0];",
+            month_map[month]
+        )
+        browser.element(f'.react-datepicker__day--0{day:02d}').click()
+
+    def _select_state(self, value):
+        browser.execute_script('arguments[0].scrollIntoView(true);', self._state())
+        time.sleep(0.5)
+        self._state.click()
+        time.sleep(0.5)
+        browser.all('[id^=react-select][id*=option]').element_by(have.text(value)).click()
+
+    def _select_city(self, value):
+        browser.execute_script('arguments[0].scrollIntoView(true);', self._city())
+        time.sleep(0.5)
+        self._city.click()
+        time.sleep(0.5)
+        browser.all('[id^=react-select][id*=option]').element_by(have.text(value)).click()
 
     def should_have_registered(self, user: User):
         self._results.should(have.text(user.full_name))

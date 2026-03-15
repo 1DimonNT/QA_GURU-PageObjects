@@ -1,8 +1,14 @@
 from pages.registration_page import RegistrationPage
 from data.user import User, Gender, Hobby
+import os
 
 
 def test_student_registration_high_level():
+    # Полный путь к файлу для загрузки
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_dir = os.path.dirname(current_dir)
+    file_path = os.path.join(project_dir, 'requirements.txt')
+
     student = User(
         first_name='Yasha',
         last_name='Kramarenko',
@@ -14,7 +20,7 @@ def test_student_registration_high_level():
         birth_day=1,
         subjects=['Computer Science', 'Maths'],
         hobbies=[Hobby.SPORTS, Hobby.READING],
-        picture='test.jpg',
+        picture=file_path,
         address='Some Address 123',
         state='NCR',
         city='Delhi'
