@@ -1,20 +1,14 @@
-"""
-Модель данных пользователя с использованием dataclass
-"""
 from dataclasses import dataclass
-from datetime import date
 from enum import Enum
 
 
 class Gender(Enum):
-    """Пол студента"""
     MALE = 'Male'
     FEMALE = 'Female'
     OTHER = 'Other'
 
 
 class Hobby(Enum):
-    """Хобби студента"""
     SPORTS = 'Sports'
     READING = 'Reading'
     MUSIC = 'Music'
@@ -22,18 +16,21 @@ class Hobby(Enum):
 
 @dataclass
 class User:
-    """Модель данных студента"""
     first_name: str
     last_name: str
     email: str
     gender: Gender
     mobile: str
-    birth_date: date = None
+    birth_year: int = 1990
+    birth_month: str = 'January'
+    birth_day: int = 1
     subjects: list = None
     hobbies: list = None
+    picture: str = None
     address: str = None
+    state: str = None
+    city: str = None
 
     @property
-    def full_name(self) -> str:
-        """Полное имя студента"""
+    def full_name(self):
         return f'{self.first_name} {self.last_name}'

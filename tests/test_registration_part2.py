@@ -1,23 +1,26 @@
-from pages import RegistrationPage
-from data import users
-from data.user import User, Gender
+from pages.registration_page import RegistrationPage
+from data.user import User, Gender, Hobby
 
-def test_student_registration_with_model():
-    student = users.student
+
+def test_student_registration_high_level():
+    student = User(
+        first_name='Yasha',
+        last_name='Kramarenko',
+        email='yashaka@gmail.com',
+        gender=Gender.MALE,
+        mobile='1234567890',
+        birth_year=1990,
+        birth_month='January',
+        birth_day=1,
+        subjects=['Computer Science', 'Maths'],
+        hobbies=[Hobby.SPORTS, Hobby.READING],
+        picture='test.jpg',
+        address='Some Address 123',
+        state='NCR',
+        city='Delhi'
+    )
+
     (RegistrationPage()
      .open()
      .register(student)
      .should_have_registered(student))
-
-def test_student_registration_with_custom_user():
-    custom_student = User(
-        first_name='John',
-        last_name='Doe',
-        email='john.doe@example.com',
-        gender=Gender.MALE,
-        mobile='5551234567'
-    )
-    (RegistrationPage()
-     .open()
-     .register(custom_student)
-     .should_have_registered(custom_student))
